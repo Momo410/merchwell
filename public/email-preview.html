@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email preview</title>
+<style>
+  :root { --bg: #f1f3f4; --card: #fff; --ink: #1f1f1f; --muted: #5f6368; --line: #e3e3e3; --chip: #fef7e0; --chip-ink: #8a5a00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  .bar { display: flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .bar strong { font-size: 15px; }
+  .chip { margin-left: auto; padding: 3px 10px; border-radius: 999px; background: var(--chip); color: var(--chip-ink); font-size: 12px; font-weight: 600; }
+  main { max-width: 880px; margin: 24px auto; padding: 0 16px; }
+  .mail { background: var(--card); border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
+  .head { padding: 22px 24px 16px; border-bottom: 1px solid var(--line); }
+  h1 { margin: 0 0 16px; font-size: 22px; font-weight: 500; }
+  .from { display: flex; gap: 12px; align-items: flex-start; }
+  .avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #0a0a0a; color: #fff; display: grid; place-items: center; font-weight: 600; text-transform: uppercase; }
+  .who { flex: 1; min-width: 0; }
+  .who b { font-weight: 600; }
+  .who span, .date { color: var(--muted); font-size: 13px; }
+  .date { white-space: nowrap; }
+  .preheader { margin: 10px 0 0 52px; color: var(--muted); font-size: 13px; }
+  iframe { display: block; width: 100%; height: 900px; border: 0; background: #fff; }
+  .error { padding: 40px 24px; color: var(--muted); }
+  @media (max-width: 560px) { .preheader { margin-left: 0; } .date { display: none; } }
+</style>
+</head>
+<body>
+<div class="bar"><strong>Inbox</strong><span class="chip">Preview · not sent</span></div>
+<main>
+  <article class="mail">
+    <header class="head">
+      <h1 id="subject">Loading…</h1>
+      <div class="from">
+        <div class="avatar" id="avatar">·</div>
+        <div class="who">
+          <div><b id="from-name"></b> <span id="from-domain"></span></div>
+          <span>to <span id="to"></span></span>
+        </div>
+        <div class="date" id="date"></div>
+      </div>
+      <p class="preheader" id="preheader"></p>
+    </header>
+    <iframe id="email" title="Email body"></iframe>
+  </article>
+</main>
+<script>
+  const src = new URLSearchParams(location.search).get("src") ?? "";
+  const frame = document.getElementById("email");
+  const set = (id, text) => { document.getElementById(id).textContent = text; };
+
+  // Only the email files the Shop Agent writes can be framed here.
+  if (!/^\/(quotes|reports)\/[A-Za-z0-9-]+\/email\.html$/.test(src)) {
+    set("subject", "No email to preview");
+    frame.replaceWith(Object.assign(document.createElement("p"), { className: "error", textContent: "Open this page from the Email button on a quote." }));
+  } else {
+    frame.addEventListener("load", () => {
+      const doc = frame.contentDocument;
+      const blocks = [...doc.querySelectorAll(".u_content_paragraph")].map((el) => el.innerText.trim());
+      const after = (label) => {
+        const i = blocks.findIndex((text) => text.toUpperCase() === label);
+        return i >= 0 && blocks[i + 1] ? blocks[i + 1].split("\n").map((line) => line.trim()).filter(Boolean) : [];
+      };
+      const isReport = src.startsWith("/reports/");
+      const [fromName = doc.title.split(/ (quote|sales report) /)[0] || "Store", fromDomain = ""] = after("FROM");
+      const [to = isReport ? "Store owner" : "Customer"] = after("PREPARED FOR");
+      const preheader = doc.querySelector('[data-skip-in-text="true"]')?.textContent.replace(/[\s​-‏͏﻿]+/g, " ").trim() ?? "";
+      const id = src.split("/")[2];
+      const issued = /^\d{8}/.test(id) ? new Date(`${id.slice(0, 4)}-${id.slice(4, 6)}-${id.slice(6, 8)}T12:00:00`) : null;
+
+      set("subject", doc.title || "Your quote");
+      set("avatar", fromName.charAt(0));
+      set("from-name", fromName);
+      set("from-domain", fromDomain ? `<${fromDomain}>` : "");
+      set("to", to);
+      set("preheader", preheader);
+      set("date", issued ? issued.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "");
+      document.title = `${doc.title} · Email preview`;
+      frame.style.height = `${doc.documentElement.scrollHeight}px`;
+    });
+    frame.src = src;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# production
+build
+
+# Eve
+.eve/
+.output/
+.nitro/
+dist/
+
+# generated archives
+/*.zip
+
+# generated quotes and their version history
+/.data/
+/public/quotes/
+/public/reports/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# next dev --experimental-https
+certificates
+
+# turborepo
+.turbo
+
+tmp/
+
+WORK.md
+PLAN.md
+progress.txt
+.figma-cache
+
+# opensrc - source code for packages
+opensrc/
+
+# generated quotes
+/public/quotes/
+/public/reports/
+/public/reports/
+
+# local working files: design notes, demo takes, Windows launcher
+/design/
+/dev-local.cmd
+/evals/**/*.log

@@ -1,0 +1,254 @@
+/* Geometry follows stageshow's ai-cards gold: the window pinned top and sides, off the bottom
+   just under the composer, the thread anchored over the composer. */
+.qd .ss-stage {
+  overflow: hidden;
+  background: transparent;
+}
+
+.qd-win {
+  position: absolute;
+  top: 28px;
+  left: 40px;
+  width: 560px;
+  height: 520px;
+}
+
+.qd-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  padding: 16px 20px 56px;
+  background: var(--ss-surface);
+}
+
+.qd-thread {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  min-height: 0;
+  padding-bottom: 20px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, #000 24px);
+}
+
+.qd-thread > * {
+  will-change: transform;
+}
+
+.qd-q {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.qd-q .ss-text {
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: #040404;
+  color: #fff;
+  font-size: 13px;
+}
+
+.qd-reply {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.qd-a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding-bottom: 14px;
+}
+
+.qd-line,
+.qd-thinking {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  white-space: normal;
+  text-wrap: pretty;
+}
+
+.qd-thinking {
+  color: var(--ss-text);
+}
+
+.qd-product {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 6px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+}
+
+.qd-thumb {
+  position: relative;
+  display: block;
+  width: 76px;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #efefef;
+}
+
+.qd-thumb img {
+  object-fit: cover;
+}
+
+.qd-ladder {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.qd-tier {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 9px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.qd-tier[data-on] {
+  background: #040404;
+  box-shadow: none;
+  color: #fff;
+}
+
+.qd-tier__min,
+.qd-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-box: trim-both cap alphabetic;
+}
+
+.qd-tier__min {
+  opacity: 0.6;
+}
+
+.qd-tier__price {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-box: trim-both cap alphabetic;
+}
+
+.qd-quote {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 1px var(--ss-line),
+    0 18px 40px -24px rgb(0 0 0 / 0.35);
+}
+
+.qd-quote__top {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ss-text);
+}
+
+.qd-total {
+  color: #040404;
+  font-family: "Geist Pixel Circle", var(--font-geist-mono), monospace;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.qd-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ss-text-strong);
+}
+
+.qd-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d71921;
+}
+
+.qd-outputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.qd-output {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  border-radius: 9px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  color: var(--ss-text-strong);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.qd-output[data-on] {
+  background: #040404;
+  box-shadow: none;
+  color: #fff;
+}
+
+.qd-output .ss-check__ring {
+  stroke: rgb(4 4 4 / 0.3);
+}
+
+.qd-output[data-on] .ss-check__ring {
+  stroke: rgb(255 255 255 / 0.45);
+}
+
+.qd-output[data-on] .ss-check__arc {
+  stroke: #fff;
+}
+
+.qd-output[data-on] .ss-check__fill {
+  fill: #fff;
+}
+
+.qd-output[data-on] .ss-check__tick {
+  stroke: #040404;
+}
+
+.qd .ss-stage[data-layout="compact"] .qd-win {
+  left: 16px;
+  width: 326px;
+  height: 600px;
+}
+
+.qd .ss-stage[data-layout="compact"] .qd-body {
+  padding-inline: 14px;
+}
+
+.qd .ss-stage[data-layout="compact"] .qd-product {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.qd .ss-stage[data-layout="compact"] .qd-thumb {
+  display: none;
+}
+
+.qd .ss-stage[data-layout="compact"] .qd-ladder {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
