@@ -42,17 +42,20 @@ async function createBot() {
   return chat;
 }
 
+// Shopper-typed text must not add bold, links or code spans to the owner's alert.
+const plain = (text: string) => text.replace(/[*_`~[\]()<>|#]/g, "");
+
 // Inline code is tap-to-copy in Telegram, so contact details stay one tap away.
 export function formatLeadAlert(lead: LeadAlert, test = false) {
   const price = lead.discounted
     ? `~~${lead.total}~~ → **${lead.discounted}**`
     : `**${lead.total}**`;
   const lines = [
-    `👤 **${lead.name}**`,
+    `👤 **${plain(lead.name)}**`,
     `✉️ \`${lead.email}\``,
     ...(lead.phone ? [`📞 \`${lead.phone}\``] : []),
     "",
-    `📦 ${lead.order}`,
+    `📦 ${plain(lead.order)}`,
     `💰 ${price}`,
     ...(lead.code ? [`🏷 ${lead.code}`] : []),
   ];

@@ -156,7 +156,7 @@ export async function writeQuote(input: QuoteRequest) {
   const shop = await fetchShop();
   const base =
     history?.base ??
-    `Q-${now.toISOString().slice(2, 10).replaceAll("-", "")}-${randomBytes(2).toString("hex").toUpperCase()}`;
+    `Q-${now.toISOString().slice(2, 10).replaceAll("-", "")}-${randomBytes(5).toString("hex").toUpperCase()}`;
   const version = (latest?.meta.version ?? 0) + 1;
   const id = `${base}-v${version}`;
   const site = shopConfig.site.url;

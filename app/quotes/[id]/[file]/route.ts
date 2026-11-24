@@ -15,6 +15,7 @@ export async function GET(_request: Request, ctx: RouteContext<"/quotes/[id]/[fi
     headers: {
       "cache-control": "private, no-store",
       "content-type": result.blob.contentType,
+      "x-content-type-options": "nosniff",
       "x-robots-tag": "noindex",
     },
   });
