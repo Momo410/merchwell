@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { defineTool } from "eve/tools";
 import { always } from "eve/tools/approval";
 import { z } from "zod";
@@ -10,6 +7,7 @@ import { checkSendLimit, LEAD_CODE, logSend, saveLeadCustomer, sendQuoteEmail } 
 import { currentQuote } from "../lib/quote";
 import { createQuoteCheckout } from "../lib/quote-checkout";
 import { renderQuoteEmail } from "../lib/render-quote";
+import { readStoredFile } from "../lib/storage";
 import { sendLeadAlert } from "../lib/telegram";
 
 const money = (amount: string, currency: string) =>
@@ -39,13 +37,13 @@ export default defineTool({
     const cart = await getCart(cartId);
     if (!cart || !cartId)
       return { ok: false as const, message: "Cart is unavailable. Refresh the storefront." };
-    const quote = currentQuote(cart, cartId);
+    const quote = await currentQuote(cart, cartId);
     if (!quote)
       return {
         ok: false as const,
         message: "No current quote matches the cart. Call make-quote first, then send it.",
       };
-    const limit = checkSendLimit(cartId, email, quote.meta.number);
+    const limit = await checkSendLimit(cartId, email, quote.meta.number);
     if (limit) return { ok: false as const, message: limit };
 
     const lead = { email, name, phone };
@@ -95,7 +93,7 @@ export default defineTool({
     const rendered = await renderQuoteEmail(quote.quote, { ...quote.meta, offer });
     const sent = await sendQuoteEmail({
       ...rendered,
-      pdf: readFileSync(join(quote.dir, "quote.pdf")),
+      pdf: await readStoredFile(`quotes/${quote.id}/quote.pdf`),
       pdfName: `${quote.meta.number}.pdf`,
       replyTo: quote.meta.shopEmail,
       subject: `Your ${quote.meta.shopName} quote ${quote.meta.number}${offer ? `: ${offer.percent}% off inside` : ""}`,
@@ -115,7 +113,7 @@ export default defineTool({
     if (!alert.ok)
       console.error(`[leads] Telegram alert failed: ${"reason" in alert ? alert.reason : ""}`);
 
-    logSend(cartId, email, quote.meta.number);
+    await logSend(cartId, email, quote.meta.number);
     return {
       ok: true as const,
       discount: offer

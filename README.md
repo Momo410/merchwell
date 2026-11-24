@@ -14,6 +14,8 @@
 
 **Merchwell** is a Shopify merch store with an AI quote assistant built in. A buyer types what their team needs, like _"40 black hoodies and 40 beanies for our offsite"_. The assistant finds the products, fills the cart and makes a quote at team prices: a **web page, an email, a PDF and a share card**, all rendered from one [Hyper Elements](https://github.com/hyper-elements/hyper-elements) design. The quote comes with a **pay link that charges exactly the quoted total**.
 
+**Live demo: [merchwell-xi.vercel.app](https://merchwell-xi.vercel.app)**. Open the chat in the bottom right and ask for a quote.
+
 <img src="docs/home.png" alt="Merchwell home page" width="100%" />
 
 ## Why it exists
@@ -86,7 +88,7 @@ The assistant always asks before it sends anything.
 
 ## Quick start
 
-You need **Node 26** and **pnpm 12**.
+You need **Node 24** and **pnpm 12**.
 
 ```bash
 git clone https://github.com/Momo410/merchwell.git
@@ -180,7 +182,7 @@ merchwell/
 
 ## Good to know
 
-- **Quote files are written to disk** (`public/quotes/` and `.data/`). That works locally and on any Node server. On Vercel the file system is read-only, so a deployment needs the files moved to storage such as Vercel Blob.
+- **Where quotes are saved.** Locally, quote files go to `public/quotes/` and the version history to `.data/`. On Vercel the disk is read-only, so connect a private **Vercel Blob** store to the project (`BLOB_READ_WRITE_TOKEN`); the agent saves there instead and the store serves the files at the same `/quotes/...` links ([`agent/lib/storage.ts`](agent/lib/storage.ts)).
 - **Every chat message calls the AI model**, which costs money. BotID guards the agent route; also set a spending limit on your Gemini key before you share a public link.
 
 ## Troubleshooting

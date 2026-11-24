@@ -1,34 +1,36 @@
-import { mkdirSync, writeFileSync } from "node:fs";
 // Renders one priced quote to all four outputs from the same Hyper Elements design.
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
 import { ElementsError, formatDiagnostics, render } from "@hyper-elements/react";
 import { renderImage } from "@hyper-elements/react/image";
 import { renderPdf, templateAssets } from "@hyper-elements/react/pdf";
 
+import geistBold from "../fonts/Geist-Bold.ttf";
+import geistMedium from "../fonts/Geist-Medium.ttf";
+import geistRegular from "../fonts/Geist-Regular.ttf";
+import geistSemiBold from "../fonts/Geist-SemiBold.ttf";
+import geistMonoMedium from "../fonts/GeistMono-Medium.ttf";
+import geistMonoRegular from "../fonts/GeistMono-Regular.ttf";
+import geistPixelCircle from "../fonts/GeistPixel-Circle.ttf";
 import type { PricedQuote } from "./pricing";
 import { QuoteCard, QuoteDocument, QuoteEmail, type QuoteMeta, QuotePage } from "./quote-design";
+import { saveFile } from "./storage";
 
+// Imported as assets so the agent's deployed bundle carries them; the PDF and image renderers read TTF, not WOFF2 (OFL, agent/fonts).
 const FONT_FILES = [
-  ["Geist", "Geist-Regular", 400],
-  ["Geist", "Geist-Medium", 500],
-  ["Geist", "Geist-SemiBold", 600],
-  ["Geist", "Geist-Bold", 700],
-  ["Geist Mono", "GeistMono-Regular", 400],
-  ["Geist Mono", "GeistMono-Medium", 500],
-  ["Geist Pixel Circle", "GeistPixel-Circle", 400],
+  ["Geist", geistRegular, 400],
+  ["Geist", geistMedium, 500],
+  ["Geist", geistSemiBold, 600],
+  ["Geist", geistBold, 700],
+  ["Geist Mono", geistMonoRegular, 400],
+  ["Geist Mono", geistMonoMedium, 500],
+  ["Geist Pixel Circle", geistPixelCircle, 400],
 ] as const;
 
-// The PDF and image renderers read TTF files (not WOFF2), kept in agent/fonts under the OFL.
 export async function signalFonts() {
-  return Promise.all(
-    FONT_FILES.map(async ([family, file, weight]) => ({
-      family,
-      src: await readFile(join(process.cwd(), "agent", "fonts", `${file}.ttf`)),
-      weight,
-    })),
-  );
+  return FONT_FILES.map(([family, dataUrl, weight]) => ({
+    family,
+    src: Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64"),
+    weight,
+  }));
 }
 
 // The PDF and the image draw offline, so every image the design names is fetched once and handed over.
@@ -48,14 +50,14 @@ export async function renderQuoteEmail(quote: PricedQuote, meta: QuoteMeta) {
   return { html, text };
 }
 
-export async function renderQuoteFiles(dir: string, quote: PricedQuote, meta: QuoteMeta) {
-  mkdirSync(dir, { recursive: true });
+export async function renderQuoteFiles(id: string, quote: PricedQuote, meta: QuoteMeta) {
+  const dir = `quotes/${id}`;
   try {
     const page = await render(<QuotePage meta={meta} quote={quote} />);
     const email = await render(<QuoteEmail meta={meta} quote={quote} />);
-    writeFileSync(join(dir, "quote.html"), page.html);
-    writeFileSync(join(dir, "email.html"), email.html);
-    writeFileSync(join(dir, "email.txt"), email.text);
+    await saveFile(`${dir}/quote.html`, page.html, "text/html; charset=utf-8");
+    await saveFile(`${dir}/email.html`, email.html, "text/html; charset=utf-8");
+    await saveFile(`${dir}/email.txt`, email.text, "text/plain; charset=utf-8");
 
     const fonts = await signalFonts();
     const doc = <QuoteDocument meta={meta} quote={quote} />;
@@ -64,10 +66,10 @@ export async function renderQuoteFiles(dir: string, quote: PricedQuote, meta: Qu
       fonts,
       images: await imageBytes(templateAssets(doc).images),
     });
-    writeFileSync(join(dir, "quote.pdf"), pdf);
+    await saveFile(`${dir}/quote.pdf`, pdf, "application/pdf");
 
     const { image } = await renderImage(<QuoteCard meta={meta} quote={quote} />, { fonts });
-    writeFileSync(join(dir, "card.png"), image);
+    await saveFile(`${dir}/card.png`, image, "image/png");
 
     const warnings = [...page.diagnostics, ...email.diagnostics];
     return { warnings: warnings.length ? formatDiagnostics(warnings) : null };

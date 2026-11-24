@@ -1,5 +1,4 @@
 // Renders a sample quote with no Shopify store, to work on the design: pnpm sample
-import { join } from "node:path";
 
 import { priceQuote, type ProductLine } from "../agent/lib/pricing";
 import { renderQuoteFiles } from "../agent/lib/render-quote";
@@ -65,8 +64,7 @@ const lines: ProductLine[] = [
 async function main() {
   const issued = new Date();
   const quote = priceQuote(lines, { issued, rush: false });
-  const dir = join(process.cwd(), "public", "quotes", "sample");
-  const result = await renderQuoteFiles(dir, quote, {
+  const result = await renderQuoteFiles("sample", quote, {
     approveUrl: "https://example.com/approve",
     currency: "USD",
     issued,
@@ -83,7 +81,7 @@ async function main() {
     validUntil: new Date(issued.getTime() + 14 * 86_400_000),
     version: 2,
   });
-  console.log(`Total ${quote.total / 100} USD · ${quote.pieces} pieces → ${dir}`);
+  console.log(`Total ${quote.total / 100} USD · ${quote.pieces} pieces → public/quotes/sample`);
   if (result.warnings) console.log(result.warnings);
 }
 

@@ -1,8 +1,6 @@
 // Turns the session's Shopify cart into a versioned merch quote: web page, email, PDF and share card.
 // Every amount comes from Shopify (price-break metafields, else the cart price); the model never supplies one.
 import { createHash, randomBytes } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { shopConfig } from "../../lib/config";
 import type { getCart } from "./cart";
@@ -16,13 +14,13 @@ import {
   getAdminToken,
   stockShortfall,
 } from "./shopify-admin";
+import { readJson, saveJson } from "./storage";
 
 type Cart = NonNullable<Awaited<ReturnType<typeof getCart>>>;
 
 const PRICE_LOCK_DAYS = 14;
 const DAY = 86_400_000;
 // Version history stays server-side, keyed by a hash of the cart id so the id itself is never stored.
-const HISTORY_DIR = join(process.cwd(), ".data", "quotes");
 
 interface StoredVersion {
   id: string;
@@ -48,17 +46,12 @@ const linksFor = (id: string) => ({
   pdf: `/quotes/${id}/quote.pdf`,
 });
 
-function historyPath(cartId: string) {
-  return join(
-    HISTORY_DIR,
-    `${createHash("sha256").update(cartId).digest("hex").slice(0, 24)}.json`,
-  );
-}
+const historyKey = (cartId: string) =>
+  `data/quotes/${createHash("sha256").update(cartId).digest("hex").slice(0, 24)}.json`;
 
-function readHistory(cartId: string): History | null {
-  const path = historyPath(cartId);
-  if (!existsSync(path)) return null;
-  const history = JSON.parse(readFileSync(path, "utf8")) as History;
+async function readHistory(cartId: string): Promise<History | null> {
+  const history = await readJson<History>(historyKey(cartId));
+  if (!history) return null;
   for (const v of history.versions) {
     v.meta.issued = new Date(v.meta.issued);
     v.meta.validUntil = new Date(v.meta.validUntil);
@@ -152,7 +145,7 @@ export async function writeQuote(input: QuoteRequest) {
     rush: input.rush,
   });
 
-  const history = readHistory(input.cartId);
+  const history = await readHistory(input.cartId);
   const latest = history?.versions.at(-1);
   const now = new Date();
   // Same cart, same asks, lock still running: the customer keeps the quote (and prices) they already have.
@@ -186,23 +179,18 @@ export async function writeQuote(input: QuoteRequest) {
     version,
   };
   const current: StoredVersion = { id, meta, quote, signature };
-  await renderQuoteFiles(join(process.cwd(), "public", "quotes", id), quote, meta);
+  await renderQuoteFiles(id, quote, meta);
 
   // The old link stays live but says it was replaced, so nobody approves stale prices.
   if (latest && !latest.meta.supersededBy) {
     latest.meta.supersededBy = { number: id, url: meta.pageUrl ?? linksFor(id).page };
-    await renderQuoteFiles(
-      join(process.cwd(), "public", "quotes", latest.id),
-      latest.quote,
-      latest.meta,
-    );
+    await renderQuoteFiles(latest.id, latest.quote, latest.meta);
   }
 
-  mkdirSync(HISTORY_DIR, { recursive: true });
-  writeFileSync(
-    historyPath(input.cartId),
-    JSON.stringify({ base, versions: [...(history?.versions ?? []), current] }),
-  );
+  await saveJson(historyKey(input.cartId), {
+    base,
+    versions: [...(history?.versions ?? []), current],
+  });
   return summarize(current, currency, { stockChecked, unchanged: false });
 }
 
@@ -210,15 +198,15 @@ const itemsOf = (cart: Cart) =>
   JSON.stringify(cart.lines.nodes.map((n) => [n.merchandise.id, n.quantity]).sort());
 
 // The latest quote for this cart, only while it still matches the cart and its price lock runs.
-export function currentQuote(cart: Cart, cartId: string) {
-  const latest = readHistory(cartId)?.versions.at(-1);
+export async function currentQuote(cart: Cart, cartId: string) {
+  const latest = (await readHistory(cartId))?.versions.at(-1);
   if (!latest || latest.meta.validUntil <= new Date()) return null;
   const quoted = JSON.stringify((JSON.parse(latest.signature) as { items: unknown }).items);
   if (quoted !== itemsOf(cart)) return null;
   const currency = cart.cost.totalAmount.currencyCode;
   return {
     currency,
-    dir: join(process.cwd(), "public", "quotes", latest.id),
+    id: latest.id,
     meta: latest.meta,
     order: latest.quote.products.map((p) => `${p.qty} × ${p.title}`).join(", "),
     quote: latest.quote,

@@ -1,15 +1,13 @@
 // Quote leads: the Shopify customer record, the quote email through Resend, and the per-cart send log.
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { adminQuery, getAdminToken } from "./shopify-admin";
+import { readJson, saveJson } from "./storage";
 
 export const LEAD_TAG = "quote-lead";
 export const LEAD_CODE = { code: "MERCHWELL10", minPieces: 24, percent: 10 } as const;
 // One cart can send the quote to a few addresses (a buyer and their manager), not an unlimited list.
 const MAX_SENDS_PER_CART = 3;
-const LEADS_DIR = join(process.cwd(), ".data", "leads");
 
 export interface Lead {
   email: string;
@@ -21,16 +19,15 @@ interface SendLog {
   sends: { at: string; email: string; quote: string }[];
 }
 
-const logPath = (cartId: string) =>
-  join(LEADS_DIR, `${createHash("sha256").update(cartId).digest("hex").slice(0, 24)}.json`);
+const logKey = (cartId: string) =>
+  `data/leads/${createHash("sha256").update(cartId).digest("hex").slice(0, 24)}.json`;
 
-function readLog(cartId: string): SendLog {
-  const path = logPath(cartId);
-  return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as SendLog) : { sends: [] };
+async function readLog(cartId: string): Promise<SendLog> {
+  return (await readJson<SendLog>(logKey(cartId))) ?? { sends: [] };
 }
 
-export function checkSendLimit(cartId: string, email: string, quote: string) {
-  const { sends } = readLog(cartId);
+export async function checkSendLimit(cartId: string, email: string, quote: string) {
+  const { sends } = await readLog(cartId);
   if (sends.some((s) => s.quote === quote && s.email === email.toLowerCase()))
     return "This quote was already sent to that address.";
   if (sends.length >= MAX_SENDS_PER_CART)
@@ -38,11 +35,10 @@ export function checkSendLimit(cartId: string, email: string, quote: string) {
   return null;
 }
 
-export function logSend(cartId: string, email: string, quote: string) {
-  const log = readLog(cartId);
+export async function logSend(cartId: string, email: string, quote: string) {
+  const log = await readLog(cartId);
   log.sends.push({ at: new Date().toISOString(), email: email.toLowerCase(), quote });
-  mkdirSync(LEADS_DIR, { recursive: true });
-  writeFileSync(logPath(cartId), JSON.stringify(log));
+  await saveJson(logKey(cartId), log);
 }
 
 const CUSTOMER_LOOKUP = `#graphql
@@ -112,7 +108,7 @@ export async function saveLeadCustomer(lead: Lead, note: string) {
 
 export interface QuoteEmail {
   html: string;
-  pdf: Buffer;
+  pdf: Buffer | null;
   pdfName: string;
   replyTo: string;
   subject: string;
@@ -129,7 +125,9 @@ export async function sendQuoteEmail(email: QuoteEmail) {
   }
   const response = await fetch("https://api.resend.com/emails", {
     body: JSON.stringify({
-      attachments: [{ content: email.pdf.toString("base64"), filename: email.pdfName }],
+      attachments: email.pdf
+        ? [{ content: email.pdf.toString("base64"), filename: email.pdfName }]
+        : [],
       from: process.env.QUOTE_EMAIL_FROM || "Merchwell <quotes@send.dripnex.com>",
       html: email.html,
       reply_to: email.replyTo,

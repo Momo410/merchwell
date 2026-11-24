@@ -1,0 +1,12 @@
+.env*
+!.env.example
+.data
+design
+docs
+public/quotes
+public/reports
+dev-local.cmd
+.next
+.eve
+node_modules
+*.tsbuildinfo
