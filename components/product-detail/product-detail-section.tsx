@@ -1,5 +1,4 @@
 import { cn } from "cn";
-import { MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import { type ReactNode, Suspense } from "react";
 
 import { BundleComponents, BundleParents } from "@/components/product-detail/bundle-components";
@@ -27,6 +26,7 @@ import { ProductSchema } from "@/components/product-detail/schema";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { shopConfig } from "@/lib/config";

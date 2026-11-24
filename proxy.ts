@@ -31,7 +31,11 @@ const AUTH_PATHS = new Set<string>([
 ]);
 
 export async function proxy(request: NextRequest): Promise<Response> {
-  if (request.method !== "POST" || request.nextUrl.pathname !== "/api/cart" || !request.cookies.has("cart"))
+  if (
+    request.method !== "POST" ||
+    request.nextUrl.pathname !== "/api/cart" ||
+    !request.cookies.has("cart")
+  )
     return handleRequest(request);
 
   // A cart closed by checkout stays in the cookie, and Shopify answers `cart: null`, which
@@ -48,7 +52,10 @@ export async function proxy(request: NextRequest): Promise<Response> {
 
 async function isClosedCartResponse(response: Response): Promise<boolean> {
   if (!response.headers.get("content-type")?.includes("application/json")) return false;
-  const data: unknown = await response.clone().json().catch(() => undefined);
+  const data: unknown = await response
+    .clone()
+    .json()
+    .catch(() => undefined);
   return typeof data === "object" && data !== null && "cart" in data && data.cart === null;
 }
 

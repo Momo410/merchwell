@@ -1,6 +1,7 @@
 import { cn } from "cn";
-import { ImageIcon } from "@/components/ui/pixel-icons";
 import type { ComponentProps } from "react";
+
+import { ImageIcon } from "@/components/ui/pixel-icons";
 
 interface ImagePlaceholderProps extends ComponentProps<"div"> {
   iconClassName?: string;

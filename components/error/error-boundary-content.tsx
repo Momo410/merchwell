@@ -1,9 +1,8 @@
 "use client";
 
-import { AlertCircleIcon } from "@/components/ui/pixel-icons";
-
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
+import { AlertCircleIcon } from "@/components/ui/pixel-icons";
 
 export function ErrorBoundaryContent({ retry }: { retry: () => void }) {
   return (

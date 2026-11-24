@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "cn";
-import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/pixel-icons";
 import {
   type ComponentProps,
   createContext,
@@ -10,6 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
+
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/pixel-icons";
 
 interface SliderContextValue {
   canScrollLeft: boolean;

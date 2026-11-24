@@ -1,10 +1,10 @@
 "use client";
 
 import { Dialog } from "@base-ui/react/dialog";
-import { ChevronRight, Menu, XIcon } from "@/components/ui/pixel-icons";
 import { type CSSProperties, useState } from "react";
 
 import { openQuoteAgent } from "@/components/agent/quote-trigger";
+import { ChevronRight, Menu, XIcon } from "@/components/ui/pixel-icons";
 import type { MenuItem } from "@/lib/menu/types";
 
 import { MenuLink } from "./menu-link";

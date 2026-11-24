@@ -44,7 +44,9 @@ async function createBot() {
 
 // Inline code is tap-to-copy in Telegram, so contact details stay one tap away.
 export function formatLeadAlert(lead: LeadAlert, test = false) {
-  const price = lead.discounted ? `~~${lead.total}~~ → **${lead.discounted}**` : `**${lead.total}**`;
+  const price = lead.discounted
+    ? `~~${lead.total}~~ → **${lead.discounted}**`
+    : `**${lead.total}**`;
   const lines = [
     `👤 **${lead.name}**`,
     `✉️ \`${lead.email}\``,

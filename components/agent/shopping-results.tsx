@@ -9,7 +9,6 @@ import {
   CarouselViewport,
 } from "@ui-sdk/react/carousel";
 import type { EveMessage } from "eve/react";
-import { ChevronLeftIcon, ChevronRightIcon, Loader2 } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
@@ -27,6 +26,7 @@ import { ProductInfoOptions } from "@/components/product-detail/product-info";
 import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
+import { ChevronLeftIcon, ChevronRightIcon, Loader2 } from "@/components/ui/pixel-icons";
 import { isCartMutation } from "@/lib/agent/cart";
 import { completedOutput, isToolPart } from "@/lib/agent/messages";
 import {

@@ -12,7 +12,7 @@
 
 </div>
 
-**Merchwell** is a Shopify merch store with an AI quote assistant built in. A buyer types what their team needs, like *"40 black hoodies and 40 beanies for our offsite"*. The assistant finds the products, fills the cart and makes a quote at team prices: a **web page, an email, a PDF and a share card**, all rendered from one [Hyper Elements](https://github.com/hyper-elements/hyper-elements) design. The quote comes with a **pay link that charges exactly the quoted total**.
+**Merchwell** is a Shopify merch store with an AI quote assistant built in. A buyer types what their team needs, like _"40 black hoodies and 40 beanies for our offsite"_. The assistant finds the products, fills the cart and makes a quote at team prices: a **web page, an email, a PDF and a share card**, all rendered from one [Hyper Elements](https://github.com/hyper-elements/hyper-elements) design. The quote comes with a **pay link that charges exactly the quoted total**.
 
 <img src="docs/home.png" alt="Merchwell home page" width="100%" />
 
@@ -29,30 +29,30 @@ The AI never invents a price. Prices, stock and totals come from **Shopify**, an
 
 The quote is one React tree in [`agent/lib/quote-design.tsx`](agent/lib/quote-design.tsx). [`agent/lib/render-quote.tsx`](agent/lib/render-quote.tsx) hands it to Hyper Elements, which renders it four ways:
 
-| Output | Hyper Elements call | File |
-|---|---|---|
-| Web page the buyer can share | `render(<QuotePage />)` | `quote.html` |
-| Email (HTML + plain text) | `render(<QuoteEmail />)` | `email.html`, `email.txt` |
-| One-page PDF | `renderPdf(<QuoteDocument />)` | `quote.pdf` |
-| Share card for chats and socials | `renderImage(<QuoteCard />)` | `card.png` |
+| Output                           | Hyper Elements call            | File                      |
+| -------------------------------- | ------------------------------ | ------------------------- |
+| Web page the buyer can share     | `render(<QuotePage />)`        | `quote.html`              |
+| Email (HTML + plain text)        | `render(<QuoteEmail />)`       | `email.html`, `email.txt` |
+| One-page PDF                     | `renderPdf(<QuoteDocument />)` | `quote.pdf`               |
+| Share card for chats and socials | `renderImage(<QuoteCard />)`   | `card.png`                |
 
 All four share one theme ([`agent/lib/signal-theme.ts`](agent/lib/signal-theme.ts), `defineTheme`), so a colour or font change shows up everywhere at once.
 
-| Web page | Email | PDF |
-|:-:|:-:|:-:|
+|                          Web page                           |                           Email                            |                          PDF                          |
+| :---------------------------------------------------------: | :--------------------------------------------------------: | :---------------------------------------------------: |
 | <img src="docs/quote-page.png" alt="Quote as a web page" /> | <img src="docs/quote-email.png" alt="Quote as an email" /> | <img src="docs/quote-pdf.png" alt="Quote as a PDF" /> |
 
 <img src="docs/quote-card.png" alt="Quote share card" width="100%" />
 
 ## How a team order works
 
-| Step | What happens | Powered by |
-|:-:|---|---|
-| **1** | The buyer asks in the chat: *"Price 50 hoodies with our logo."* | **eve** agent + **UI SDK** chat panel |
-| **2** | The assistant searches the catalog and fills the cart. | **eve** tools + **Shopify** catalog |
-| **3** | Prices drop at 24, 50, 100 and 250 pieces, read from each product. | **Shopify** metafields |
-| **4** | The quote is made as a page, an email, a PDF and a share card. | **Hyper Elements** |
-| **5** | The quote becomes a draft order with a pay link at the exact quoted total. | **Shopify** Admin API |
+| Step  | What happens                                                                | Powered by                                   |
+| :---: | --------------------------------------------------------------------------- | -------------------------------------------- |
+| **1** | The buyer asks in the chat: _"Price 50 hoodies with our logo."_             | **eve** agent + **UI SDK** chat panel        |
+| **2** | The assistant searches the catalog and fills the cart.                      | **eve** tools + **Shopify** catalog          |
+| **3** | Prices drop at 24, 50, 100 and 250 pieces, read from each product.          | **Shopify** metafields                       |
+| **4** | The quote is made as a page, an email, a PDF and a share card.              | **Hyper Elements**                           |
+| **5** | The quote becomes a draft order with a pay link at the exact quoted total.  | **Shopify** Admin API                        |
 | **6** | When the buyer sends it, the lead is saved and the store owner gets a ping. | **Chat SDK** → Telegram (+ **Resend** email) |
 
 The assistant always asks before it sends anything.
@@ -80,8 +80,8 @@ The assistant always asks before it sends anything.
 - **Lead alerts.** Every sent quote is saved and pinged to Telegram.
 - **Made for phones.** Full-width menu, sticky Add to bag, and price boxes that fit small screens.
 
-| Product page | Phone |
-|:-:|:-:|
+|                               Product page                               |                                  Phone                                   |
+| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
 | <img src="docs/team-pricing.png" alt="Product page with team pricing" /> | <img src="docs/phone-home.png" alt="Home page on a phone" width="260" /> |
 
 ## Quick start
@@ -104,6 +104,7 @@ Price 40 black hoodies in size L for Acme Studio
 
 > [!TIP]
 > No products yet? Seed the demo products and their collections into your Shopify store (safe to run again):
+>
 > ```bash
 > node --env-file=.env.local node_modules/tsx/dist/cli.mjs scripts/seed-merch.ts
 > node --env-file=.env.local node_modules/tsx/dist/cli.mjs scripts/seed-collections.ts
@@ -111,21 +112,21 @@ Price 40 black hoodies in size L for Acme Studio
 
 ## What you need
 
-| Service | What it's for | |
-|---|---|:-:|
-| **Shopify store** · a free [development store](https://shopify.dev/docs/apps/build/dev-dashboard/development-stores) works | Products, cart and checkout | **Required** |
-| **Storefront API token** · Shopify admin → Settings → Apps → Headless | Lets the site read products and run the cart | **Required** |
-| **Gemini API key** · [Google AI Studio](https://aistudio.google.com/apikey) | The model behind the assistant | **Required** |
-| **Shopify Admin app** · client ID + secret | Price breaks, live stock, seeding and pay links | Recommended |
-| **Telegram bot** · [@BotFather](https://t.me/BotFather) + your chat ID | A ping for every new quote, sent with Chat SDK | Optional |
-| **Resend API key** · with a verified domain | Emails the quote to the customer | Optional |
+| Service                                                                                                                    | What it's for                                   |              |
+| -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | :----------: |
+| **Shopify store** · a free [development store](https://shopify.dev/docs/apps/build/dev-dashboard/development-stores) works | Products, cart and checkout                     | **Required** |
+| **Storefront API token** · Shopify admin → Settings → Apps → Headless                                                      | Lets the site read products and run the cart    | **Required** |
+| **Gemini API key** · [Google AI Studio](https://aistudio.google.com/apikey)                                                | The model behind the assistant                  | **Required** |
+| **Shopify Admin app** · client ID + secret                                                                                 | Price breaks, live stock, seeding and pay links | Recommended  |
+| **Telegram bot** · [@BotFather](https://t.me/BotFather) + your chat ID                                                     | A ping for every new quote, sent with Chat SDK  |   Optional   |
+| **Resend API key** · with a verified domain                                                                                | Emails the quote to the customer                |   Optional   |
 
 Give the Admin app only the access you use:
 
-| For | Permissions |
-|---|---|
-| The store | `read_products`, `read_inventory` |
-| Pay links | `write_draft_orders` |
+| For          | Permissions                                                              |
+| ------------ | ------------------------------------------------------------------------ |
+| The store    | `read_products`, `read_inventory`                                        |
+| Pay links    | `write_draft_orders`                                                     |
 | Seed scripts | `write_products`, `write_inventory`, `write_publications`, `write_files` |
 
 ## Environment variables
@@ -169,13 +170,13 @@ merchwell/
 
 ## Make it yours
 
-| To change | Edit |
-|---|---|
-| Store name and colours | `lib/config/` and `--color-signal` in `app/globals.css` |
-| What the assistant says | `agent/instructions.ts` |
-| What the assistant can do | `agent/tools/` |
-| The quote's look (page, email, PDF, card) | `agent/lib/quote-design.tsx` and `agent/lib/signal-theme.ts` |
-| Price breaks | The `custom.price_breaks` metafield on each product in Shopify |
+| To change                                 | Edit                                                           |
+| ----------------------------------------- | -------------------------------------------------------------- |
+| Store name and colours                    | `lib/config/` and `--color-signal` in `app/globals.css`        |
+| What the assistant says                   | `agent/instructions.ts`                                        |
+| What the assistant can do                 | `agent/tools/`                                                 |
+| The quote's look (page, email, PDF, card) | `agent/lib/quote-design.tsx` and `agent/lib/signal-theme.ts`   |
+| Price breaks                              | The `custom.price_breaks` metafield on each product in Shopify |
 
 ## Good to know
 

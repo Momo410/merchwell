@@ -2,6 +2,7 @@
 
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
 import { cn } from "cn";
+
 import { ChevronDownIcon } from "@/components/ui/pixel-icons";
 
 function Accordion({ ...props }: AccordionPrimitive.Root.Props) {

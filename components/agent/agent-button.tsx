@@ -1,10 +1,10 @@
 "use client";
 
 import { Popover, PopoverClose, PopoverContent } from "@ui-sdk/react/popover";
-import { XIcon } from "@/components/ui/pixel-icons";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { XIcon } from "@/components/ui/pixel-icons";
 import { readStoredChat } from "@/lib/agent/chat/client";
 
 import { AgentPanel } from "./client";

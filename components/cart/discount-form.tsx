@@ -2,11 +2,11 @@
 
 import type { CartData } from "@shopify/hydrogen";
 import { cn } from "cn";
-import { Loader2, X } from "@/components/ui/pixel-icons";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader2, X } from "@/components/ui/pixel-icons";
 import { useCart, useCartForm } from "@/lib/cart/client";
 
 interface DiscountFormProps {

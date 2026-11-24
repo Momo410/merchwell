@@ -1,9 +1,9 @@
 "use client";
 
 import type { EveMessage } from "eve/react";
-import { ExternalLink, FileDown, Mail } from "@/components/ui/pixel-icons";
 import type { ReactNode } from "react";
 
+import { ExternalLink, FileDown, Mail } from "@/components/ui/pixel-icons";
 import { completedOutput } from "@/lib/agent/messages";
 import { AGENT_TOOL } from "@/lib/agent/tools";
 

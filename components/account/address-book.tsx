@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2, Pencil, Plus, Trash2 } from "@/components/ui/pixel-icons";
 import { type FormEvent, useState, useTransition } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2, Pencil, Plus, Trash2 } from "@/components/ui/pixel-icons";
 import { Switch } from "@/components/ui/switch";
 import {
   createAddressAction,

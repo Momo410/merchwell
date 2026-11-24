@@ -1,11 +1,11 @@
 "use client";
 
 import type { CartLine as HydrogenCartLine } from "@shopify/hydrogen";
-import { MinusIcon, PlusIcon, Trash2Icon } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
+import { MinusIcon, PlusIcon, Trash2Icon } from "@/components/ui/pixel-icons";
 import { useCart } from "@/lib/cart/client";
 import type { CartLine } from "@/lib/cart/types";
 import { formatPrice } from "@/lib/money";

@@ -1,12 +1,12 @@
 "use client";
 
 import { cn } from "cn";
-import { Loader2, MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 
 import { QuoteTrigger } from "@/components/agent/quote-trigger";
 import { useCartDrawer } from "@/components/cart/context";
+import { Loader2, MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import type { Image as ImageType } from "@/lib/media/types";
 import { formatPrice } from "@/lib/money";
 import type { Money } from "@/lib/money/types";

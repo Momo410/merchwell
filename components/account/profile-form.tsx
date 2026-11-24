@@ -1,11 +1,11 @@
 "use client";
 
-import { Loader2 } from "@/components/ui/pixel-icons";
 import { type FormEvent, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "@/components/ui/pixel-icons";
 import { updateProfileAction } from "@/lib/customer/action";
 import type { CustomerProfile } from "@/lib/customer/types";
 

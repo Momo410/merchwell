@@ -3,10 +3,10 @@
 import { createToaster, Toast, ToastClose, ToastRegion, ToastTitle } from "@ui-sdk/react/toast";
 import { activeTurn, idle, openInteractions } from "eve/events";
 import { useEveAgent } from "eve/react";
-import { Trash2Icon, XIcon } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 
+import { Trash2Icon, XIcon } from "@/components/ui/pixel-icons";
 import {
   Sheet,
   SheetClose,

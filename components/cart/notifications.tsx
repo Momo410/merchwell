@@ -1,8 +1,8 @@
 "use client";
 
-import { XIcon } from "@/components/ui/pixel-icons";
 import { useEffect, useState } from "react";
 
+import { XIcon } from "@/components/ui/pixel-icons";
 import { useCart } from "@/lib/cart/client";
 
 const DISMISS_AFTER_MS = 5000;

@@ -1,6 +1,5 @@
-import { UserRoundCheckIcon, UserRoundIcon } from "@/components/ui/pixel-icons";
-
 import { Link } from "@/components/ui/link";
+import { UserRoundCheckIcon, UserRoundIcon } from "@/components/ui/pixel-icons";
 import { isCustomerLoggedIn } from "@/lib/auth/server";
 
 export async function NavAccount() {

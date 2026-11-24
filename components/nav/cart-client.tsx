@@ -1,8 +1,7 @@
 "use client";
 
-import { HandbagIcon } from "@/components/ui/pixel-icons";
-
 import { useCartDrawer } from "@/components/cart/context";
+import { HandbagIcon } from "@/components/ui/pixel-icons";
 import { useCart } from "@/lib/cart/client";
 
 interface CartIconClientProps {

@@ -1,10 +1,10 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { Link } from "@/components/ui/link";
+import { ArrowLeft, ArrowRight } from "@/components/ui/pixel-icons";
 
 export interface StageLook {
   alt: string;

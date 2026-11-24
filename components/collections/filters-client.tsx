@@ -8,7 +8,6 @@ import {
   serializeCollectionParams,
 } from "@shopify/hydrogen";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
-import { CheckIcon, LoaderCircleIcon, XIcon } from "@/components/ui/pixel-icons";
 import {
   type KeyboardEvent,
   type MouseEventHandler,
@@ -19,6 +18,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Link } from "@/components/ui/link";
+import { CheckIcon, LoaderCircleIcon, XIcon } from "@/components/ui/pixel-icons";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Swatch } from "@/components/ui/swatch";
 import { parseFilterInput } from "@/lib/collections";

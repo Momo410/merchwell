@@ -1,5 +1,4 @@
 import { HandbagIcon } from "@/components/ui/pixel-icons";
-
 import { getCart } from "@/lib/cart/server";
 import { withFallback } from "@/lib/shopify/errors/server";
 

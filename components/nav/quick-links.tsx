@@ -1,10 +1,10 @@
-import { ChevronRight, MessageSquare, Shirt } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { type ReactNode, Suspense } from "react";
 
 import { QuoteTrigger } from "@/components/agent/quote-trigger";
 import { Price } from "@/components/product/price";
 import { Link } from "@/components/ui/link";
+import { ChevronRight, MessageSquare, Shirt } from "@/components/ui/pixel-icons";
 import { getCollectionResults } from "@/lib/collections/server";
 import type { MenuItem } from "@/lib/menu/types";
 import { buildProductUrl } from "@/lib/product";

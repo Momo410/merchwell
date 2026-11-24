@@ -1,9 +1,10 @@
 "use client";
 
 import { cn } from "cn";
-import { PauseIcon, PlayIcon } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { type ComponentProps, useEffect, useRef, useState, useSyncExternalStore } from "react";
+
+import { PauseIcon, PlayIcon } from "@/components/ui/pixel-icons";
 
 interface AutoPlayVideoPreviewImage {
   src: string;

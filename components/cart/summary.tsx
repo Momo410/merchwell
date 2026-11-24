@@ -1,12 +1,12 @@
 "use client";
 
 import type { CartData } from "@shopify/hydrogen";
-import { Loader2 } from "@/components/ui/pixel-icons";
 
 import { openQuoteAgent } from "@/components/agent/quote-trigger";
 import { useCartDrawer } from "@/components/cart/context";
 import { Price } from "@/components/product/price";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "@/components/ui/pixel-icons";
 import { useCart, useCheckout } from "@/lib/cart/client";
 
 import { DiscountForm } from "./discount-form";

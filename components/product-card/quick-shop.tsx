@@ -2,7 +2,6 @@
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import type { ValidProductSelectionResult } from "@shopify/hydrogen/react";
-import { PlusIcon, XIcon } from "@/components/ui/pixel-icons";
 import Image from "next/image";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
@@ -12,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
+import { PlusIcon, XIcon } from "@/components/ui/pixel-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { shopConfig } from "@/lib/config";
 import { buildProductUrl } from "@/lib/product";

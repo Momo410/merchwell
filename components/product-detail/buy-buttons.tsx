@@ -2,11 +2,11 @@
 
 import { getShopPayButtonUrl } from "@shopify/hydrogen";
 import { cn } from "cn";
-import { Loader2, MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import { useEffect, useId, useState } from "react";
 
 import { useCartDrawer } from "@/components/cart/context";
 import { Button } from "@/components/ui/button";
+import { Loader2, MinusIcon, PlusIcon } from "@/components/ui/pixel-icons";
 import { formatPrice } from "@/lib/money";
 import type { Money } from "@/lib/money/types";
 import { getProductPurchaseOptions } from "@/lib/product";

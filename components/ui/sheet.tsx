@@ -2,8 +2,9 @@
 
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import { cn } from "cn";
-import { XIcon } from "@/components/ui/pixel-icons";
 import type { ComponentProps } from "react";
+
+import { XIcon } from "@/components/ui/pixel-icons";
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;

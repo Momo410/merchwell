@@ -1,9 +1,9 @@
 "use client";
 
 import type { CartErrorGroup } from "@shopify/hydrogen";
-import { AlertTriangle, X } from "@/components/ui/pixel-icons";
 import { useState } from "react";
 
+import { AlertTriangle, X } from "@/components/ui/pixel-icons";
 import { useCart } from "@/lib/cart/client";
 
 interface CartWarningsProps {

@@ -1,9 +1,9 @@
 "use client";
 
-import { CornerDownLeftIcon, SquareIcon } from "@/components/ui/pixel-icons";
 import type { KeyboardEvent } from "react";
 
 import { InputGroup, InputGroupButton, InputGroupTextarea } from "@/components/ui/input-group";
+import { CornerDownLeftIcon, SquareIcon } from "@/components/ui/pixel-icons";
 
 type AgentStatus = "busy" | "idle" | "resuming";
 

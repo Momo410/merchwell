@@ -31,8 +31,13 @@ const APPAREL = ["S", "M", "L", "XL", "XXL"];
 const SEEDS: Seed[] = [
   {
     colors: ["Off White", "Black", "Heather Grey"],
-    decoration: { method: "Screen print, front and back", setupCents: 90_00, shipCentsPerUnit: 1_10 },
-    description: "450 gsm brushed-back fleece, dropped shoulders, double-lined hood. Built to be the one piece your team actually keeps wearing.",
+    decoration: {
+      method: "Screen print, front and back",
+      setupCents: 90_00,
+      shipCentsPerUnit: 1_10,
+    },
+    description:
+      "450 gsm brushed-back fleece, dropped shoulders, double-lined hood. Built to be the one piece your team actually keeps wearing.",
     handle: "heavyweight-hoodie",
     ladder: [68_00, 62_00, 58_00, 52_00],
     photo: "hoodie",
@@ -43,8 +48,13 @@ const SEEDS: Seed[] = [
   },
   {
     colors: ["Black", "Off White", "Heather Grey"],
-    decoration: { method: "Screen print, left chest and back", setupCents: 60_00, shipCentsPerUnit: 45 },
-    description: "260 gsm combed cotton in a boxy cut with a dense ribbed collar. Holds its shape wash after wash.",
+    decoration: {
+      method: "Screen print, left chest and back",
+      setupCents: 60_00,
+      shipCentsPerUnit: 45,
+    },
+    description:
+      "260 gsm combed cotton in a boxy cut with a dense ribbed collar. Holds its shape wash after wash.",
     handle: "boxy-tee",
     ladder: [34_00, 31_00, 28_00, 25_00],
     photo: "tee",
@@ -92,7 +102,8 @@ const SEEDS: Seed[] = [
   {
     colors: ["Natural", "Black"],
     decoration: { method: "Screen print, one side", setupCents: 45_00, shipCentsPerUnit: 40 },
-    description: "16 oz heavy canvas tote with long handles and an inside pocket. Fits a 16 inch laptop.",
+    description:
+      "16 oz heavy canvas tote with long handles and an inside pocket. Fits a 16 inch laptop.",
     handle: "canvas-tote",
     ladder: [26_00, 24_00, 22_00, 19_00],
     photo: "tote",
@@ -103,8 +114,13 @@ const SEEDS: Seed[] = [
   },
   {
     colors: ["Off White", "Black"],
-    decoration: { method: "Full-wrap print, dishwasher safe", setupCents: 40_00, shipCentsPerUnit: 80 },
-    description: "12 oz matte stoneware mug with a contrast handle. Heavy in the hand, made for the desk.",
+    decoration: {
+      method: "Full-wrap print, dishwasher safe",
+      setupCents: 40_00,
+      shipCentsPerUnit: 80,
+    },
+    description:
+      "12 oz matte stoneware mug with a contrast handle. Heavy in the hand, made for the desk.",
     handle: "studio-mug",
     ladder: [22_00, 20_00, 18_00, 16_00],
     photo: "mug",
@@ -116,7 +132,8 @@ const SEEDS: Seed[] = [
   {
     colors: ["Clear", "Black"],
     decoration: { method: "Laser engraved", setupCents: 50_00, shipCentsPerUnit: 70 },
-    description: "750 ml double-wall insulated bottle. Cold for 24 hours, hot for 12, and nothing leaks.",
+    description:
+      "750 ml double-wall insulated bottle. Cold for 24 hours, hot for 12, and nothing leaks.",
     handle: "insulated-bottle",
     ladder: [40_00, 37_00, 34_00, 30_00],
     photo: "bottle",
@@ -132,15 +149,33 @@ const PHOTOS = join(process.cwd(), "design", "products", "square");
 async function uploadPhoto(token: string, name: string) {
   const bytes = readFileSync(join(PHOTOS, `${name}.png`));
   const { stagedUploadsCreate } = await adminQuery<{
-    stagedUploadsCreate: { stagedTargets: { parameters: { name: string; value: string }[]; resourceUrl: string; url: string }[]; userErrors: { message: string }[] };
+    stagedUploadsCreate: {
+      stagedTargets: {
+        parameters: { name: string; value: string }[];
+        resourceUrl: string;
+        url: string;
+      }[];
+      userErrors: { message: string }[];
+    };
   }>(
     token,
     `mutation Stage($input: [StagedUploadInput!]!) {
       stagedUploadsCreate(input: $input) { stagedTargets { url resourceUrl parameters { name value } } userErrors { message } }
     }`,
-    { input: [{ fileSize: String(bytes.length), filename: `merchwell-${name}.png`, httpMethod: "POST", mimeType: "image/png", resource: "IMAGE" }] },
+    {
+      input: [
+        {
+          fileSize: String(bytes.length),
+          filename: `merchwell-${name}.png`,
+          httpMethod: "POST",
+          mimeType: "image/png",
+          resource: "IMAGE",
+        },
+      ],
+    },
   );
-  if (stagedUploadsCreate.userErrors.length) throw new Error(stagedUploadsCreate.userErrors.map((e) => e.message).join("; "));
+  if (stagedUploadsCreate.userErrors.length)
+    throw new Error(stagedUploadsCreate.userErrors.map((e) => e.message).join("; "));
   const target = stagedUploadsCreate.stagedTargets[0];
   const form = new FormData();
   for (const p of target.parameters) form.append(p.name, p.value);
@@ -152,11 +187,16 @@ async function uploadPhoto(token: string, name: string) {
 
 async function main() {
   const token = await getAdminToken();
-  if (!token) throw new Error("Set SHOPIFY_ADMIN_CLIENT_ID and SHOPIFY_ADMIN_CLIENT_SECRET in .env.local.");
+  if (!token)
+    throw new Error("Set SHOPIFY_ADMIN_CLIENT_ID and SHOPIFY_ADMIN_CLIENT_SECRET in .env.local.");
   const { locations, publications } = await adminQuery<{
     locations: { nodes: { id: string; shipsInventory: boolean }[] };
     publications: { nodes: { id: string; name: string }[] };
-  }>(token, "{ locations(first: 20) { nodes { id shipsInventory } } publications(first: 20) { nodes { id name } } }", {});
+  }>(
+    token,
+    "{ locations(first: 20) { nodes { id shipsInventory } } publications(first: 20) { nodes { id name } } }",
+    {},
+  );
   // Stock only sells online from a location that ships; any other location makes every variant unavailable.
   const locationId = (locations.nodes.find((l) => l.shipsInventory) ?? locations.nodes[0]).id;
 
@@ -172,15 +212,26 @@ async function main() {
     if (seed.sizes) options.push({ name: "Size", values: seed.sizes.map((name) => ({ name })) });
     const variants = seed.colors.flatMap((color) =>
       sizes.map((size) => ({
-        inventoryItem: { sku: `MW-${seed.photo}-${color}${size ? `-${size}` : ""}`.toUpperCase().replaceAll(" ", ""), tracked: true },
+        inventoryItem: {
+          sku: `MW-${seed.photo}-${color}${size ? `-${size}` : ""}`
+            .toUpperCase()
+            .replaceAll(" ", ""),
+          tracked: true,
+        },
         inventoryPolicy: "DENY",
         inventoryQuantities: [{ locationId, name: "available", quantity: seed.stock(color, size) }],
-        optionValues: [{ name: color, optionName: "Color" }, ...(size ? [{ name: size, optionName: "Size" }] : [])],
+        optionValues: [
+          { name: color, optionName: "Color" },
+          ...(size ? [{ name: size, optionName: "Size" }] : []),
+        ],
         price: (seed.ladder[0] / 100).toFixed(2),
       })),
     );
     const { productSet } = await adminQuery<{
-      productSet: { product: { handle: string; id: string; variantsCount: { count: number } } | null; userErrors: { field: string[]; message: string }[] };
+      productSet: {
+        product: { handle: string; id: string; variantsCount: { count: number } } | null;
+        userErrors: { field: string[]; message: string }[];
+      };
     }>(
       token,
       `mutation Seed($input: ProductSetInput!) {
@@ -193,7 +244,13 @@ async function main() {
         input: {
           ...(existing.productByIdentifier ? { id: existing.productByIdentifier.id } : {}),
           descriptionHtml: `<p>${seed.description}</p><p>Branded with your logo. Minimum 24 pieces; the price per piece drops at 50, 100 and 250.</p>`,
-          files: [{ alt: `${seed.title} with a Merchwell dot-matrix print`, contentType: "IMAGE", originalSource: photo }],
+          files: [
+            {
+              alt: `${seed.title} with a Merchwell dot-matrix print`,
+              contentType: "IMAGE",
+              originalSource: photo,
+            },
+          ],
           handle: seed.handle,
           metafields: [
             {
@@ -202,7 +259,12 @@ async function main() {
               type: "json",
               value: JSON.stringify(MINS.map((min, i) => ({ min, unitCents: seed.ladder[i] }))),
             },
-            { key: "decoration", namespace: "custom", type: "json", value: JSON.stringify(seed.decoration) },
+            {
+              key: "decoration",
+              namespace: "custom",
+              type: "json",
+              value: JSON.stringify(seed.decoration),
+            },
           ],
           productOptions: options,
           productType: seed.type,
@@ -215,14 +277,19 @@ async function main() {
       },
     );
     if (productSet.userErrors.length || !productSet.product)
-      throw new Error(`${seed.title}: ${productSet.userErrors.map((e) => `${e.field?.join(".")} ${e.message}`).join("; ")}`);
+      throw new Error(
+        `${seed.title}: ${productSet.userErrors.map((e) => `${e.field?.join(".")} ${e.message}`).join("; ")}`,
+      );
 
     // Stock is set explicitly: productSet only applies inventoryQuantities when it creates a variant.
     const { product } = await adminQuery<{
       product: {
         variants: {
           nodes: {
-            inventoryItem: { id: string; inventoryLevels: { nodes: { id: string; location: { id: string } }[] } };
+            inventoryItem: {
+              id: string;
+              inventoryLevels: { nodes: { id: string; location: { id: string } }[] };
+            };
             selectedOptions: { name: string; value: string }[];
           }[];
         };
@@ -248,13 +315,24 @@ async function main() {
         "mutation On($item: ID!, $loc: ID!, $key: String!) { inventoryActivate(inventoryItemId: $item, locationId: $loc) @idempotent(key: $key) { userErrors { message } } }",
         { item: itemId, key: randomUUID(), loc: locationId },
       );
-      quantities.push({ changeFromQuantity: null, inventoryItemId: itemId, locationId, quantity: seed.stock(color, size) });
+      quantities.push({
+        changeFromQuantity: null,
+        inventoryItemId: itemId,
+        locationId,
+        quantity: seed.stock(color, size),
+      });
       for (const level of variant.inventoryItem.inventoryLevels.nodes) {
         if (level.location.id === locationId) continue;
-        await adminQuery(token, "mutation Off($id: ID!) { inventoryDeactivate(inventoryLevelId: $id) { userErrors { message } } }", { id: level.id });
+        await adminQuery(
+          token,
+          "mutation Off($id: ID!) { inventoryDeactivate(inventoryLevelId: $id) { userErrors { message } } }",
+          { id: level.id },
+        );
       }
     }
-    const { inventorySetQuantities } = await adminQuery<{ inventorySetQuantities: { userErrors: { message: string }[] } }>(
+    const { inventorySetQuantities } = await adminQuery<{
+      inventorySetQuantities: { userErrors: { message: string }[] };
+    }>(
       token,
       `mutation Stock($input: InventorySetQuantitiesInput!, $key: String!) {
         inventorySetQuantities(input: $input) @idempotent(key: $key) { userErrors { message } }
@@ -262,14 +340,21 @@ async function main() {
       { input: { name: "available", quantities, reason: "correction" }, key: randomUUID() },
     );
     if (inventorySetQuantities.userErrors.length)
-      throw new Error(`${seed.title} stock: ${inventorySetQuantities.userErrors.map((e) => e.message).join("; ")}`);
+      throw new Error(
+        `${seed.title} stock: ${inventorySetQuantities.userErrors.map((e) => e.message).join("; ")}`,
+      );
 
-    const { publishablePublish } = await adminQuery<{ publishablePublish: { userErrors: { message: string }[] } }>(
+    const { publishablePublish } = await adminQuery<{
+      publishablePublish: { userErrors: { message: string }[] };
+    }>(
       token,
       `mutation Publish($id: ID!, $input: [PublicationInput!]!) {
         publishablePublish(id: $id, input: $input) { userErrors { message } }
       }`,
-      { id: productSet.product.id, input: publications.nodes.map((p) => ({ publicationId: p.id })) },
+      {
+        id: productSet.product.id,
+        input: publications.nodes.map((p) => ({ publicationId: p.id })),
+      },
     );
     const publishErrors = publishablePublish.userErrors.map((e) => e.message).join("; ");
     console.log(
