@@ -1,2 +1,6 @@
 minimumReleaseAgeExclude:
   - '@ui-sdk/react@0.1.0-beta.13'
+allowBuilds:
+  '@mongodb-js/zstd': false
+  esbuild: false
+  node-liblzma: false
