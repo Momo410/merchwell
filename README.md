@@ -14,7 +14,7 @@
 
 **Merchwell** is a Shopify merch store with an AI quote assistant built in. A buyer types what their team needs, like _"40 black hoodies and 40 beanies for our offsite"_. The assistant finds the products, fills the cart and makes a quote at team prices: a **web page, an email, a PDF and a share card**, all rendered from one [Hyper Elements](https://github.com/hyper-elements/hyper-elements) design. The quote comes with a **pay link that charges exactly the quoted total**.
 
-**Live demo: [merchwell-xi.vercel.app](https://merchwell-xi.vercel.app)**. Open the chat in the bottom right and ask for a quote.
+**Live demo: [merchwell.aiwithmomo.com](https://merchwell.aiwithmomo.com)**. Open the chat in the bottom right and ask for a quote.
 
 <img src="docs/home.png" alt="Merchwell home page" width="100%" />
 
