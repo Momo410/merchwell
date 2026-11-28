@@ -16,9 +16,9 @@
 
 **Live demo: [merchwell.aiwithmomo.com](https://merchwell.aiwithmomo.com)**. Open the chat in the bottom right and ask for a quote.
 
-**▶ [Watch the 53-second demo](docs/merchwell-demo.mp4)**: one real chat, typed live and sped up. 30 hoodies at $2,073, cheaper at 50, re-quoted to $3,100, a $2,790 pay link, then the page, email, PDF and share card it made and the lead on Telegram.
+**▶ [Watch the 53-second demo](https://merchwell-launch.aiwithmomo.com/merchwell-demo-github.mp4)**: one real chat, typed live and sped up. 30 hoodies at $2,073, cheaper at 50, re-quoted to $3,100, a $2,790 pay link, then the page, email, PDF and share card it made and the lead on Telegram.
 
-<a href="docs/merchwell-demo.mp4"><img src="docs/readme/demo-poster.png" alt="Merchwell demo video: one chat, four real outputs made from one Hyper Elements design" width="100%" /></a>
+<a href="https://merchwell-launch.aiwithmomo.com/merchwell-demo-github.mp4"><img src="docs/readme/demo-poster.png" alt="Merchwell demo video: one chat, four real outputs made from one Hyper Elements design" width="100%" /></a>
 
 <img src="docs/home.png" alt="Merchwell home page" width="100%" />
 
