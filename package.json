@@ -1,7 +1,14 @@
 {
-  "name": "vercel-shop",
+  "name": "merchwell",
   "version": "2026.11.0",
   "private": true,
+  "description": "Shopify merch store with an AI quote agent that prices team orders and sends the quote as a page, email and PDF.",
+  "homepage": "https://merchwell.aiwithmomo.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Momo410/merchwell.git"
+  },
   "type": "module",
   "scripts": {
     "build": "next build",
